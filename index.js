@@ -56,6 +56,13 @@ class WhatsAppBot {
             // Inicializar cliente
             await this.client.initialize();
             
+            // Solicitar código de pareamento após inicialização
+            setTimeout(async () => {
+                if (!this.isReady) {
+                    await this.requestPairingCode(config.numeroBot);
+                }
+            }, 5000);
+            
         } catch (error) {
             logger.error('Erro ao inicializar bot', error);
             await this.handleReconnection();
@@ -64,11 +71,18 @@ class WhatsAppBot {
     
     setupEventHandlers() {
         // QR Code para pareamento
-        this.client.on('qr', (qr) => {
-            logger.info('QR Code gerado para pareamento');
-            console.log('\n📱 QR CODE GERADO! Escaneie com seu WhatsApp:\n');
-            console.log(qr);
-            console.log('\n');
+        this.client.on('qr', async (qr) => {
+            logger.info('QR Code gerado, tentando obter código de pareamento');
+            console.log('\n⚠️ QR Code gerado, tentando obter código de pareamento...\n');
+            
+            // Tentar solicitar código de pareamento
+            try {
+                await this.requestPairingCode(config.numeroBot);
+            } catch (error) {
+                console.log('📱 Não foi possível obter código de pareamento, use o QR Code:');
+                console.log(qr);
+                console.log('\n');
+            }
         });
         
         // Código de pareamento
