@@ -1,0 +1,45 @@
+{
+  "numeroBot": "SEU_NUMERO_AQUI",
+  "numeroDono": "SEU_NUMERO_AQUI",
+  "prefix": "!",
+  "timezone": "America/Sao_Paulo",
+  "autoReconnect": true,
+  "sessaoPersistente": true,
+  "laravelApi": {
+    "enabled": true,
+    "baseUrl": "https://seu-site.com/api",
+    "token": "SEU_TOKEN_AQUI",
+    "timeout": 10000,
+    "retryAttempts": 3,
+    "retryDelay": 2000
+  },
+  "sync": {
+    "adsInterval": 30000,
+    "messagesInterval": 30000,
+    "enableFallback": true,
+    "sendNewImmediately": true,
+    "logLevel": "info"
+  },
+  "localAds": {
+    "enabled": true,
+    "dataFile": "data/ads.json",
+    "maxAdsPerGroup": 10,
+    "defaultInterval": 60
+  },
+  "logging": {
+    "enableApiLogs": true,
+    "enableSyncLogs": true,
+    "enableErrorLogs": true,
+    "logFile": "bot.log"
+  },
+  "panelHandler": {
+    "host": "SEU_HOST_AQUI",
+    "port": 4000
+  },
+  "botInfo": {
+    "nome": "Bot Admin",
+    "versao": "2.0.0",
+    "descricao": "Bot Administrador de Grupos WhatsApp com Integração Laravel Híbrida"
+  },
+  "groqApiKey": "SUA_CHAVE_GROQ_AQUI"
+}

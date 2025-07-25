@@ -1,0 +1,33 @@
+{
+  "name": "whatsapp-bot-ads",
+  "version": "2.0.0",
+  "description": "Bot WhatsApp com Anúncios Automáticos e Integração Laravel",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "ads",
+    "laravel",
+    "automation"
+  ],
+  "author": "Bot Admin",
+  "license": "MIT",
+  "dependencies": {
+    "whatsapp-web.js": "^1.23.0",
+    "qrcode-terminal": "^0.12.0",
+    "axios": "^1.6.2",
+    "moment-timezone": "^0.5.43",
+    "fs-extra": "^11.2.0",
+    "winston": "^3.11.0",
+    "cron": "^3.1.6",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
