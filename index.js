@@ -183,9 +183,20 @@ class WhatsAppBot {
         });
         
         // Loading screen
-        this.client.on('loading_screen', (percent, message) => {
+        this.client.on('loading_screen', async (percent, message) => {
             if (percent < 100) {
                 console.log(`📱 Carregando WhatsApp Web: ${percent}% - ${message}`);
+            } else {
+                // Tentar solicitar pairing code quando carregamento completo
+                setTimeout(async () => {
+                    if (!this.isReady && !this.pairingCode) {
+                        try {
+                            await this.requestPairingCode(config.numeroBot);
+                        } catch (error) {
+                            logger.debug('Não foi possível solicitar pairing code automaticamente', error);
+                        }
+                    }
+                }, 2000);
             }
         });
     }
@@ -246,23 +257,40 @@ class WhatsAppBot {
                 phoneNumber = config.numeroBot;
             }
             
+            // Verificar se já está registrado
+            if (this.client.authState?.creds?.registered) {
+                logger.info('Cliente já está registrado, pairing code não necessário');
+                return null;
+            }
+            
             // Limpar número (remover caracteres não numéricos)
             const cleanNumber = phoneNumber.replace(/\D/g, '');
+            
+            // Verificar se o número tem o formato correto (deve ter pelo menos 10 dígitos)
+            if (cleanNumber.length < 10) {
+                throw new Error('Número de telefone inválido. Deve ter pelo menos 10 dígitos.');
+            }
             
             logger.info('Solicitando código de pareamento', { numero: cleanNumber });
             
             const code = await this.client.requestPairingCode(cleanNumber);
             this.pairingCode = code;
             
-            console.log('\n🔗 CÓDIGO DE PAREAMENTO SOLICITADO:');
-            console.log(`📱 Número: ${cleanNumber}`);
+            console.log('\n🔗 CÓDIGO DE PAREAMENTO GERADO:');
+            console.log(`📱 Número: +${cleanNumber}`);
             console.log(`🔢 Código: ${code}`);
-            console.log('📋 Digite este código no WhatsApp Web do número informado\n');
+            console.log('\n📋 INSTRUÇÕES:');
+            console.log('1. Abra o WhatsApp no seu celular');
+            console.log('2. Vá em Configurações > Aparelhos conectados');
+            console.log('3. Toque em "Conectar um aparelho"');
+            console.log('4. Digite o código quando solicitado: ' + code);
+            console.log('\n⏰ O código expira em alguns minutos!\n');
             
             return code;
             
         } catch (error) {
             logger.error('Erro ao solicitar código de pareamento', error);
+            console.log('❌ Erro ao gerar código de pareamento:', error.message);
             throw error;
         }
     }
